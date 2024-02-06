@@ -66,7 +66,7 @@ const Login = () => {
       return;
     }
 
-    axios.post('http://localhost:8081/login', sendData)
+    axios.post('https://vercel-server-gilt.vercel.app/login', sendData)
       .then((res) => {
         if (res.data === "Failed") {
           alert("Invalid User.")
