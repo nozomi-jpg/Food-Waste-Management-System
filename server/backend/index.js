@@ -10,10 +10,10 @@ app.use(cors());
 app.use(cookieParser());
 
 const db = mysql.createConnection({
-  host: "sql307.infinityfree.com",
-  user: "if0_35929223",
-  password: "CMix5A8dyVF",
-  database: "if0_35929223_foodwastedb",
+  host: "sql6.freesqldatabase.com",
+  user: "sql6682403",
+  password: "q84pbFTF66",
+  database: "sql6682403",
 });
 
 app.post("/login", (req, res) => {
