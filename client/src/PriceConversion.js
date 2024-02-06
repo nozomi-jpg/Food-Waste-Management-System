@@ -104,7 +104,7 @@ function Dropdown({ inventory_id, inventory_name, handleFieldChanges }) {
     const fetchAllIngredients = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8081/ingredientsDropdown"
+          "https://vercel-server-gilt.vercel.app/ingredientsDropdown"
         );
 
         //Rename the keys of the data object

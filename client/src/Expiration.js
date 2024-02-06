@@ -50,7 +50,7 @@ function TableSection() {
     const fetchAllIngredients = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8081/inventory/expiration-table"
+          "https://vercel-server-gilt.vercel.app/inventory/expiration-table"
         );
        //Rename the keys of the data object
        res.data.forEach(Rename);

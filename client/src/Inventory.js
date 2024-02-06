@@ -75,7 +75,7 @@ function NotificationComponent({ handleOpenNotif }) {
   useEffect(() => {
     const fetchExpiringToday = async () => {
       try {
-        const res = await axios.get("http://localhost:8081/expiringToday");
+        const res = await axios.get("https://vercel-server-gilt.vercel.app/expiringToday");
         setExpiringThisDay(res.data);
       } catch (err) {
         console.log(err);
@@ -89,7 +89,7 @@ function NotificationComponent({ handleOpenNotif }) {
   useEffect(() => {
     const fetchExpiringWeek = async () => {
       try {
-        const res = await axios.get("http://localhost:8081/expiringWeek");
+        const res = await axios.get("https://vercel-server-gilt.vercel.app/expiringWeek");
         setExpiringThisWeek(res.data);
       } catch (err) {
         console.log(err);
@@ -160,7 +160,7 @@ function TableSection() {
   useEffect(() => {
     const fetchAllIngredients = async () => {
       try {
-        const res = await axios.get("http://localhost:8081/ingredients");
+        const res = await axios.get("https://vercel-server-gilt.vercel.app/ingredients");
 
         //Rename the keys of the data object
         res.data.forEach(Rename);
@@ -322,7 +322,7 @@ function TableSection() {
   //no need ng id
   const addRecord = (record) => {
     axios
-      .post("http://localhost:8081/addInventory", record)
+      .post("https://vercel-server-gilt.vercel.app/addInventory", record)
       .then((res) => {
         if (res.data === "Failed") {
           alert("This type of ingredient already exists.");
@@ -339,7 +339,7 @@ function TableSection() {
   //function for updating the currentFormRecord to the database
   const updateRecord = (record) => {
     axios
-      .post("http://localhost:8081/updateInventory", record)
+      .post("https://vercel-server-gilt.vercel.app/updateInventory", record)
       .then((res) => {
         alert("Successfully Updated Record.");
       })
@@ -352,7 +352,7 @@ function TableSection() {
   //function for deleting the currentFormRecord to the database
   const deleteRecord = (record) => {
     axios
-      .post("http://localhost:8081/deleteInventory", record)
+      .post("https://vercel-server-gilt.vercel.app/deleteInventory", record)
       .then((res) => {
         alert("Successfully Deleted Record.");
       })
@@ -425,7 +425,7 @@ function FormSection({ clickedRecord, handleSetInventoryRecord }) {
   useEffect(() => {
     const fetchAllTypes = async () => {
       try {
-        const res = await axios.get("http://localhost:8081/types");
+        const res = await axios.get("https://vercel-server-gilt.vercel.app/types");
         //Rename the keys of the data object
         res.data.forEach(Rename);
         function Rename(item) {

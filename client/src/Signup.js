@@ -64,7 +64,7 @@ const Signup = () => {
       return;
     }
 
-    axios.post('http://localhost:8081/signup', sendData)
+    axios.post('https://vercel-server-gilt.vercel.app/signup', sendData)
       .then((res) => {
         if (res.data === 'Failed') {
           alert('Username is already taken.');

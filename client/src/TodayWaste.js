@@ -53,7 +53,7 @@ function TableSection() {
   useEffect(()=>{
     const fetchAllWaste = async () => {
       try{
-        const res = await axios.get("http://localhost:8081/wastes")
+        const res = await axios.get("https://vercel-server-gilt.vercel.app/wastes")
         
         //Rename the keys of the data object
         res.data.forEach(Rename);
@@ -180,7 +180,7 @@ function TableSection() {
   //no need ng id
   const addRecord = (record) => {
     //insert code to add record to database
-    axios.post('http://localhost:8081/addWaste', record)
+    axios.post('https://vercel-server-gilt.vercel.app/addWaste', record)
     .then((res) => {
       if(res.data === "Failed") {
         alert("This ingredient is already in the waste list.")
@@ -196,7 +196,7 @@ function TableSection() {
 
   //function for updating the currentFormRecord to the database
   const updateRecord = (record) => {
-    axios.post('http://localhost:8081/updateWaste', record)
+    axios.post('https://vercel-server-gilt.vercel.app/updateWaste', record)
       .then((res) => {
         if(res.data === "Failed") {
           alert("This ingredient is already in the waste list.")
@@ -211,7 +211,7 @@ function TableSection() {
   };
 
   const deleteRecord = (record) => {
-    axios.post('http://localhost:8081/deleteWaste', record)
+    axios.post('https://vercel-server-gilt.vercel.app/deleteWaste', record)
       .then((res) => {
         alert("Successfully Deleted Record.")
       })
@@ -264,7 +264,7 @@ function FormSection({clickedRecord,handleSetInventoryRecord}) {
   useEffect(()=>{
     const fetchAllTypes = async () => {
       try{
-        const res = await axios.get("http://localhost:8081/types")
+        const res = await axios.get("https://vercel-server-gilt.vercel.app/types")
         //Rename the keys of the data object
         res.data.forEach(Rename);
         function Rename(item){
@@ -438,7 +438,7 @@ function Dropdown({ inventory_id, inventory_name, handleFieldChanges }) {
   useEffect(()=>{
     const fetchAllIngredients = async () => {
       try{
-        const res = await axios.get("http://localhost:8081/ingredientsDropdown")
+        const res = await axios.get("https://vercel-server-gilt.vercel.app/ingredientsDropdown")
         
         //Rename the keys of the data object
         res.data.forEach(Rename);
