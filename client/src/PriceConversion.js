@@ -4,22 +4,6 @@ import "./css/priceconversion.css";
 import { useEffect } from "react";
 import axios from "axios";
 
-//sample data
-const sampleIngredients = [
-  {
-    Name: "Abcd",
-    Price: "120", //per kilo
-  },
-  {
-    Name: "Bcde",
-    Price: "120",
-  },
-  {
-    Name: "cdfghi",
-    Price: "120",
-  },
-];
-
 export default function PriceConversion() {
   return (
     <div className="priceconversion">
@@ -31,22 +15,42 @@ export default function PriceConversion() {
 
 function IngredientSearch() {
   const [price, setPrice] = useState(0);
-
-  const [searchedWord, setSearchedWord] = useState("");
   const [isItemsOpen, setItemsOpen] = useState(true);
+  const [selectedIngredient, setSelectedIngredient] = useState({
+    ingredient: "",
+    inventory_id: 0,
+    price: 0,
+  });
+  const [weight, setWeight] = useState(0);
 
-  console.log(searchedWord);
-  const handleSearch = (e) => {
-    setSearchedWord(() => e.target.value);
+  const handleFieldChanges = (field, value, field2, value2) => {
+    setSelectedIngredient((prev) => ({
+      ...prev,
+      [field]: value,
+      [field2]: value2,
+    }));
   };
 
   const handleItemOpen = () => {
     setItemsOpen((prev) => !prev);
   };
 
-  const handlePriceCalc = () => {
-    // insert how to compute for the price of the searched ingredient
-    setPrice(1000); //sample value
+  const handlePriceCalc = async () => {
+    try {
+      const res = await axios.get(
+        `https://vercel-server-gilt.vercel.app/ingredientPrice/${selectedIngredient.inventory_id}`
+      );
+      const ingredientPrice = res.data.price;
+
+      if (weight > 0 && ingredientPrice > 0) {
+        setPrice(ingredientPrice * weight);
+      } else {
+        // Handle invalid weight or price
+        setPrice(0);
+      }
+    } catch (error) {
+      console.error("Error fetching ingredient price:", error);
+    }
   };
 
   return (
@@ -56,7 +60,13 @@ function IngredientSearch() {
           <div id="price-ingredient-wrapper">
             <label for="price-ingredient">Ingredient</label>
 
-            <Dropdown />
+            <Dropdown
+              inventory_id={selectedIngredient.inventory_id}
+              inventory_name={selectedIngredient.ingredient}
+              handleFieldChanges={handleFieldChanges}
+              price={price}
+              setPrice={setPrice}
+            />
           </div>
 
           <div id="price-weight-wrapper">
@@ -67,6 +77,8 @@ function IngredientSearch() {
                 type="number"
                 id="price-weight"
                 placeholder="Enter weight in kg"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
               />
             </div>
           </div>
@@ -87,7 +99,13 @@ function IngredientSearch() {
   );
 }
 
-function Dropdown({ inventory_id, inventory_name, handleFieldChanges }) {
+function Dropdown({
+  inventory_id,
+  inventory_name,
+  handleFieldChanges,
+  price,
+  setPrice,
+}) {
   const [searchedWord, setSearchedWord] = useState("");
   const [isSearchOpen, setSearchOpen] = useState(false);
 
@@ -104,7 +122,7 @@ function Dropdown({ inventory_id, inventory_name, handleFieldChanges }) {
     const fetchAllIngredients = async () => {
       try {
         const res = await axios.get(
-          "https://vercel-server-gilt.vercel.app/ingredientsDropdown"
+          "http://localhost:8081/ingredientsDropdown"
         );
 
         //Rename the keys of the data object
@@ -150,9 +168,11 @@ function Dropdown({ inventory_id, inventory_name, handleFieldChanges }) {
     handleFieldChanges(
       "inventory_id",
       ingredient.inventory_id,
-      "ingredient_field",
+      "ingredient",
       ingredient.Ingredient
     );
+    setPrice(0); // Reset the price when a new ingredient is selected
+    setSearchOpen(false); // Close the dropdown after selecting an ingredient
   };
 
   return (
