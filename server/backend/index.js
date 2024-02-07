@@ -164,6 +164,20 @@ app.get("/ingredientsDropdown", (req, res) => {
   });
 });
 
+
+app.get("/ingredientPrice/:id", (req, res) => {
+  const ingredientId = req.params.id;
+  const q = "SELECT `Price` FROM inventory WHERE `Inventory_ID` = ?";
+  
+  db.query(q, ingredientId, (err, data) => {
+    if (err) return res.json(err);
+    if (data.length === 0) {
+      return res.status(404).json({ error: "Ingredient not found" });
+    }
+    return res.json({ price: data[0].Price });
+  });
+});
+
 app.get("/wastes", (req, res) => {
   const q =
     "SELECT `Waste_ID`, `Name_inventory`, waste.Inventory_ID,  type.Type_name, `Kg_waste`, `Pcs_waste`, `Price`, inventory.Type_ID FROM waste LEFT JOIN inventory ON waste.Inventory_ID = inventory.Inventory_ID LEFT JOIN type ON inventory.Type_ID = type.Type_ID WHERE Date_waste = CURRENT_DATE";
