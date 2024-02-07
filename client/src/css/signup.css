@@ -3,7 +3,9 @@
 .main {
     background-color: #FFFFFF;
     width: 400px;
-    height: 450px;
+    height: fit-content;
+    min-height: 450px;
+    padding-bottom: 20px;
     margin: 7em auto;
     margin-top: 15em;
     border-top: 7em;
