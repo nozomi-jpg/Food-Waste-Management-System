@@ -250,14 +250,15 @@ app.post("/addInventory", (req, res) => {
 
 app.post("/addWaste", (req,res)=>{
   const q1 = "SELECT `Inventory_ID` FROM `waste` WHERE `Inventory_ID` = ? AND User_id = ? "
-  const q2 = "INSERT INTO `waste` (`User_id`,`Kg_waste`,`Pcs_waste`, `Inventory_ID`) VALUES (?)"
+  const q2 = "INSERT INTO `waste` (`User_id`,`Kg_waste`,`Pcs_waste`, `Inventory_ID`,`Date_waste`) VALUES (?)"
   const userID =  1000
-
+  const currentDate = new Date().toISOString().slice(0, 10);
   const values = [
     userID,
     req.body.weight,
     req.body.pieces,
     req.body.inv_id,
+    currentDate
   ];
       //Insert new waste.
       db.query(q2, [values], (err,data)=>{
