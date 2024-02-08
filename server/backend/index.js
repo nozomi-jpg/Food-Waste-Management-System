@@ -380,6 +380,17 @@ app.post("/updateWaste", (req, res) => {
     Inventory_ID: inv_id,
   };
 
+  //Update selected type of waste
+  db.query(q, [values, userID, req.body.id], (err, data) => {
+    if (err) {
+      console.log(err);
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
   app.post("/deleteWaste", (req, res) => {
     const q = "DELETE FROM waste WHERE User_id = ? AND Waste_ID = ?";
     const userID = 1000;
@@ -394,17 +405,6 @@ app.post("/updateWaste", (req, res) => {
       }
     });
   });
-
-  //Update selected type of waste
-  db.query(q, [values, userID, req.body.id], (err, data) => {
-    if (err) {
-      console.log(err);
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
 
 app.listen(3306, () => {
   console.log("Connected to backend");
