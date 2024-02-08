@@ -47,7 +47,9 @@ export default function Recommendation({
     }
 
     // Recommendation based on the total price of wasted food
-    if (totalWastePrice <= 250) {
+    if (totalWastePrice == "No waste") {
+      recommendations.push("There is zero wasted money. Keep it up!");
+    } else if (totalWastePrice <= 250) {
       recommendations.push(
         "There is a small amount of wasted money. Consider leniently monitoring purchases and slightly cut down on costs."
       );
@@ -71,7 +73,9 @@ export default function Recommendation({
     }
 
     // Recommendation based on the total kilograms of waste
-    if (totalWasteKgs <= 10) {
+    if (totalWasteKgs == "No waste") {
+      recommendations.push("There is no waste of food. Good job!");
+    } else if (totalWasteKgs <= 10) {
       recommendations.push(
         "There is a light waste of food. Consider leniently monitoring the inventory"
       );
