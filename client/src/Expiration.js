@@ -8,8 +8,8 @@ import moment from "moment";
 
 //sample columns
 const columns = [
-  "ID",
   "Ingredient",
+  "ID",
   "Type",
   "Pieces",
   "Weight",
