@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./css/inventory.css";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import { SearchBar, SortBy, Filter } from "./Search.js";
+import { SearchBar, SortBy } from "./Search.js";
 import Table from "./Table.js";
 import { format } from "date-fns";
 import CrudButtons from "./CrudButtons.js";
@@ -11,8 +11,8 @@ import moment from "moment";
 
 //sample columns
 const columns = [
-  "ID",
   "Ingredient",
+  "ID",
   "Type",
   "typeId",
   "Pieces",
@@ -196,7 +196,7 @@ function TableSection() {
 
   //for query
   const [searchValue, setSearchValue] = useState(""); //holds the value you type in the searchbox
-  const [searchedColumn, setSearchedColumn] = useState("ID"); //hold the chosen column beside the sortby
+  const [searchedColumn, setSearchedColumn] = useState("Ingredient"); //hold the chosen column beside the sortby
   const [order, setOrder] = useState("ASC"); //holds the chosen order, ASC or DESC
   const [isPerishable, setIsPerishable] = useState(true); //hpersihable or non
 
@@ -379,7 +379,7 @@ function TableSection() {
           handleOrder={handleOrder}
           currentOrder={order}
         />
-        <Filter handleIsPerishable={handleIsPerishable} />
+        {/* <Filter handleIsPerishable={handleIsPerishable} /> */}
       </div>
 
       {/* change column and data props */}
