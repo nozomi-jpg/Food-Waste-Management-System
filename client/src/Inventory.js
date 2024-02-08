@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./css/inventory.css";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import { SearchBar, SortBy, Filter } from "./Search.js";
+import { SearchBar, SortBy } from "./Search.js";
 import Table from "./Table.js";
 import { format } from "date-fns";
 import CrudButtons from "./CrudButtons.js";
@@ -75,7 +75,9 @@ function NotificationComponent({ handleOpenNotif }) {
   useEffect(() => {
     const fetchExpiringToday = async () => {
       try {
-        const res = await axios.get("https://vercel-server-gilt.vercel.app/expiringToday");
+        const res = await axios.get(
+          "https://vercel-server-gilt.vercel.app/expiringToday"
+        );
         setExpiringThisDay(res.data);
       } catch (err) {
         console.log(err);
@@ -89,7 +91,9 @@ function NotificationComponent({ handleOpenNotif }) {
   useEffect(() => {
     const fetchExpiringWeek = async () => {
       try {
-        const res = await axios.get("https://vercel-server-gilt.vercel.app/expiringWeek");
+        const res = await axios.get(
+          "https://vercel-server-gilt.vercel.app/expiringWeek"
+        );
         setExpiringThisWeek(res.data);
       } catch (err) {
         console.log(err);
@@ -160,7 +164,9 @@ function TableSection() {
   useEffect(() => {
     const fetchAllIngredients = async () => {
       try {
-        const res = await axios.get("https://vercel-server-gilt.vercel.app/ingredients");
+        const res = await axios.get(
+          "https://vercel-server-gilt.vercel.app/ingredients"
+        );
 
         //Rename the keys of the data object
         res.data.forEach(Rename);
@@ -196,7 +202,7 @@ function TableSection() {
 
   //for query
   const [searchValue, setSearchValue] = useState(""); //holds the value you type in the searchbox
-  const [searchedColumn, setSearchedColumn] = useState("ID"); //hold the chosen column beside the sortby
+  const [searchedColumn, setSearchedColumn] = useState("Ingredient"); //hold the chosen column beside the sortby
   const [order, setOrder] = useState("ASC"); //holds the chosen order, ASC or DESC
   const [isPerishable, setIsPerishable] = useState(true); //hpersihable or non
 
@@ -370,7 +376,7 @@ function TableSection() {
           inventory_items={inventory_items}
           setFilteredItems={setFilteredItems}
           searchedColumn={searchedColumn}
-          order = {order}
+          order={order}
         />
         <SortBy
           options={columns}
@@ -379,7 +385,6 @@ function TableSection() {
           handleOrder={handleOrder}
           currentOrder={order}
         />
-        <Filter handleIsPerishable={handleIsPerishable} />
       </div>
 
       {/* change column and data props */}
@@ -425,7 +430,9 @@ function FormSection({ clickedRecord, handleSetInventoryRecord }) {
   useEffect(() => {
     const fetchAllTypes = async () => {
       try {
-        const res = await axios.get("https://vercel-server-gilt.vercel.app/types");
+        const res = await axios.get(
+          "https://vercel-server-gilt.vercel.app/types"
+        );
         //Rename the keys of the data object
         res.data.forEach(Rename);
         function Rename(item) {
