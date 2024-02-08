@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "./Header";
 import Table from "./Table.js";
-import axios from 'axios';
+import axios from "axios";
 import "./css/todaywaste.css";
 import { Link } from "react-router-dom";
 import CrudButtons from "./CrudButtons.js";
@@ -32,51 +32,53 @@ export default function TodayWaste() {
 }
 
 function TableSection() {
-
   //for waste
-  const[waste_items, setWasteItems] = useState(
-    [
-      {
-        id: 1,
-        inventory_id: 12,
-        Ingredient: "Carrot",
-        Type: "Vegetable",
-        TypeId: 2,
-        Pcs: 100,
-        Kgs: 0,
-        price: 0,
-      }
-    ]
-  ); 
+  const [waste_items, setWasteItems] = useState([
+    {
+      id: 1,
+      inventory_id: 12,
+      Ingredient: "Carrot",
+      Type: "Vegetable",
+      TypeId: 2,
+      Pcs: 100,
+      Kgs: 0,
+      price: 0,
+    },
+  ]);
 
   //Display all waste
-  useEffect(()=>{
+  useEffect(() => {
     const fetchAllWaste = async () => {
-      try{
-        const res = await axios.get("https://vercel-server-gilt.vercel.app/wastes")
-        
+      try {
+        const res = await axios.get(
+          "https://vercel-server-gilt.vercel.app/wastes"
+        );
+
         //Rename the keys of the data object
         res.data.forEach(Rename);
-        function Rename(item){
-          delete Object.assign(item, { id: item.Waste_ID })['Waste_ID'];
-          delete Object.assign(item, { inventory_id: item.Inventory_ID })['Inventory_ID'];
-          delete Object.assign(item, { Ingredient: item.Name_inventory })['Name_inventory'];
-          delete Object.assign(item, { Type: item.Type_name })['Type_name'];
-          delete Object.assign(item, { TypeId: item.Type_ID })['Type_ID'];
-          delete Object.assign(item, { Pcs: item.Pcs_waste })['Pcs_waste'];
-          delete Object.assign(item, { Kgs: item.Kg_waste })['Kg_waste'];
-          delete Object.assign(item, { price: item.Price })['Price'];
+        function Rename(item) {
+          delete Object.assign(item, { id: item.Waste_ID })["Waste_ID"];
+          delete Object.assign(item, { inventory_id: item.Inventory_ID })[
+            "Inventory_ID"
+          ];
+          delete Object.assign(item, { Ingredient: item.Name_inventory })[
+            "Name_inventory"
+          ];
+          delete Object.assign(item, { Type: item.Type_name })["Type_name"];
+          delete Object.assign(item, { TypeId: item.Type_ID })["Type_ID"];
+          delete Object.assign(item, { Pcs: item.Pcs_waste })["Pcs_waste"];
+          delete Object.assign(item, { Kgs: item.Kg_waste })["Kg_waste"];
+          delete Object.assign(item, { price: item.Price })["Price"];
         }
-        
-        setWasteItems(res.data)
-      } catch(err){
-        console.log(err)
+
+        setWasteItems(res.data);
+      } catch (err) {
+        console.log(err);
       }
     };
 
     fetchAllWaste();
   }, [waste_items]);
-
 
   const [clickedRecord, setTodayWasteRecord] = useState({
     //holds attributes and values of the record you clicked from the table
@@ -135,8 +137,8 @@ function TableSection() {
     price: 0,
   });
 
-  console.log(currentFormRecord)
-   //if crud button is clicked, this function will be executed.
+  console.log(currentFormRecord);
+  //if crud button is clicked, this function will be executed.
   // we are setting the currentFormRecord (the record to be updated/added sa database) based on values passed from the form
   const handleSetInventoryRecord = (textfieldsValues, operation, ID) => {
     setCurrentFormRecord(() => ({
@@ -180,43 +182,46 @@ function TableSection() {
   //no need ng id
   const addRecord = (record) => {
     //insert code to add record to database
-    axios.post('https://vercel-server-gilt.vercel.app/addWaste', record)
-    .then((res) => {
-      if(res.data === "Failed") {
-        alert("This ingredient is already in the waste list.")
-      } else{
-        alert("Successfully added new waste.")
-      }
-    })
-    .catch((error) => {
-      console.log('Error during adding record:', error);
-      // Add additional error handling as needed
-    });
+    axios
+      .post("https://vercel-server-gilt.vercel.app/addWaste", record)
+      .then((res) => {
+        if (res.data === "Failed") {
+          alert("This ingredient is already in the waste list.");
+        } else {
+          alert("Successfully added new waste.");
+        }
+      })
+      .catch((error) => {
+        console.log("Error during adding record:", error);
+        // Add additional error handling as needed
+      });
   };
 
   //function for updating the currentFormRecord to the database
   const updateRecord = (record) => {
-    axios.post('https://vercel-server-gilt.vercel.app/updateWaste', record)
+    axios
+      .post("https://vercel-server-gilt.vercel.app/updateWaste", record)
       .then((res) => {
-        if(res.data === "Failed") {
-          alert("This ingredient is already in the waste list.")
-        } else{
-          alert("Successfully Updated Record")
+        if (res.data === "Failed") {
+          alert("This ingredient is already in the waste list.");
+        } else {
+          alert("Successfully Updated Record");
         }
       })
       .catch((error) => {
-        alert('Error during updating record:', error);
+        alert("Error during updating record:", error);
         // Add additional error handling as needed
       });
   };
 
   const deleteRecord = (record) => {
-    axios.post('https://vercel-server-gilt.vercel.app/deleteWaste', record)
+    axios
+      .post("https://vercel-server-gilt.vercel.app/deleteWaste", record)
       .then((res) => {
-        alert("Successfully Deleted Record.")
+        alert("Successfully Deleted Record.");
       })
       .catch((error) => {
-        alert('Error during deleting record:', error);
+        alert("Error during deleting record:", error);
         // Add additional error handling as needed
       });
   };
@@ -242,7 +247,7 @@ function TableSection() {
   );
 }
 
-function FormSection({clickedRecord,handleSetInventoryRecord}) {
+function FormSection({ clickedRecord, handleSetInventoryRecord }) {
   //if not 0, use this for updating and deleting record; else, add new record
   const currentID = clickedRecord.id;
 
@@ -258,24 +263,30 @@ function FormSection({clickedRecord,handleSetInventoryRecord}) {
   });
 
   //for types
-  const[types, setTypes] = useState([]);
+  const [types, setTypes] = useState([]);
 
   //display list of type of wastes
-  useEffect(()=>{
+  useEffect(() => {
     const fetchAllTypes = async () => {
-      try{
-        const res = await axios.get("https://vercel-server-gilt.vercel.app/types")
+      try {
+        const res = await axios.get(
+          "https://vercel-server-gilt.vercel.app/types"
+        );
         //Rename the keys of the data object
         res.data.forEach(Rename);
-        function Rename(item){
-          delete Object.assign(item, { id: item.Type_ID })['Type_ID'];
-          delete Object.assign(item, { type_name: item.Type_name })['Type_name'];
-          delete Object.assign(item, { perishable: (item.Is_perishable == 0) ? "false": "true" })['Is_perishable'];
+        function Rename(item) {
+          delete Object.assign(item, { id: item.Type_ID })["Type_ID"];
+          delete Object.assign(item, { type_name: item.Type_name })[
+            "Type_name"
+          ];
+          delete Object.assign(item, {
+            perishable: item.Is_perishable == 0 ? "false" : "true",
+          })["Is_perishable"];
         }
 
-        setTypes(res.data)
-      } catch(err){
-        console.log(err)
+        setTypes(res.data);
+      } catch (err) {
+        console.log(err);
       }
     };
 
@@ -316,17 +327,21 @@ function FormSection({clickedRecord,handleSetInventoryRecord}) {
 
   //if crud button is clicked, pass the values from text fields, along with the operation (add, update, or delete)
   const handleOperation = (textfields, operation) => {
-    const isEmpty = Object.values(textfields).some(value => {
-      return typeof value === 'string' && value.trim() === '';
-    });  
-  
-    if (operation === 'add') {
+    const isEmpty = Object.values(textfields).some((value) => {
+      return typeof value === "string" && value.trim() === "";
+    });
+
+    if (operation === "add") {
       if (!isEmpty) {
         handleSetInventoryRecord(textfields, operation, currentID);
       } else {
         alert("Please fill in the textfields.");
       }
-    } else if (clickedRecord.id !== null && clickedRecord.id !== undefined && clickedRecord.id !== 0) {
+    } else if (
+      clickedRecord.id !== null &&
+      clickedRecord.id !== undefined &&
+      clickedRecord.id !== 0
+    ) {
       handleSetInventoryRecord(textfields, operation, currentID);
     } else {
       alert("No record was selected.");
@@ -372,18 +387,6 @@ function FormSection({clickedRecord,handleSetInventoryRecord}) {
             </div>
             <div className="today-det-row">
               <div>
-                <label for="waste-price">Price</label>
-                <input
-                  type="text"
-                  id="waste-price"
-                  placeholder="Enter price (&#8369;)"
-                  value={textfields.price_field}
-                  onChange={(e) =>
-                    handleFieldChanges("price_field", e.target.value)
-                  }
-                />
-              </div>
-              <div>
                 <label for="waste-qty">Quantity</label>
                 <div>
                   <input
@@ -425,36 +428,39 @@ function Dropdown({ inventory_id, inventory_name, handleFieldChanges }) {
   const [isSearchOpen, setSearchOpen] = useState(false);
 
   //for ingredients
-  const[inventory_items, setInventoryItems] = useState(
-    [
-      {
-        inventory_id: 0,
-        Ingredient: "Vegetable",
-      }
-    ]
-  ); 
+  const [inventory_items, setInventoryItems] = useState([
+    {
+      inventory_id: 0,
+      Ingredient: "Vegetable",
+    },
+  ]);
 
   //Display ingredients from inventory
-  useEffect(()=>{
+  useEffect(() => {
     const fetchAllIngredients = async () => {
-      try{
-        const res = await axios.get("https://vercel-server-gilt.vercel.app/ingredientsDropdown")
-        
+      try {
+        const res = await axios.get(
+          "https://vercel-server-gilt.vercel.app/ingredientsDropdown"
+        );
+
         //Rename the keys of the data object
         res.data.forEach(Rename);
-        function Rename(item){
-          delete Object.assign(item, { inventory_id: item.Inventory_ID })['Inventory_ID'];
-          delete Object.assign(item, { Ingredient: item.Name_inventory })['Name_inventory'];
+        function Rename(item) {
+          delete Object.assign(item, { inventory_id: item.Inventory_ID })[
+            "Inventory_ID"
+          ];
+          delete Object.assign(item, { Ingredient: item.Name_inventory })[
+            "Name_inventory"
+          ];
         }
-        setInventoryItems(res.data)
-      } catch(err){
-        console.log(err)
+        setInventoryItems(res.data);
+      } catch (err) {
+        console.log(err);
       }
     };
 
     fetchAllIngredients();
   }, []);
-
 
   useEffect(() => {
     setChosenItem({
