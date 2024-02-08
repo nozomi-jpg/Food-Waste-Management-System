@@ -494,24 +494,14 @@ function Dropdown({ inventory_id, inventory_name, handleFieldChanges }) {
     inventory_id: 0,
   });
 
-const handleDropDownss = (ingredient) => {
-    fetchIngredientPrice(ingredient.inventory_id);
-   
-      handleFieldChanges(
-        "inventory_id",
-        ingredient.inventory_id,
-        "ingredient_field",
-        ingredient.Ingredient
-      );
-    };
-    const fetchIngredientPrice = async (inventoryId) => {
-      try {
-        const res = await axios.get(`https://vercel-server-gilt.vercel.app/ingredientPrice/${inventoryId}`);
-        handleFieldChanges("price_field", res.data.price);
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  const handleDropDownss = (ingredient) => {
+    handleFieldChanges(
+      "inventory_id",
+      ingredient.inventory_id,
+      "ingredient_field",
+      ingredient.Ingredient
+    );
+  };
 
 
   return (
