@@ -248,30 +248,26 @@ app.post("/addInventory", (req, res) => {
   });
 });
 
-app.post("/addWaste", (req, res) => {
-  const q1 =
-    "SELECT `Inventory_ID` FROM `waste` WHERE `Inventory_ID` = ? AND User_id = ? ";
-  const q2 =
-    "INSERT INTO `waste` (`User_id`,`Kg_waste`,`Pcs_waste`, `Inventory_ID`) VALUES (?)";
-  const userID = 1000;
+app.post("/addWaste", (req,res)=>{
+  const q1 = "SELECT `Inventory_ID` FROM `waste` WHERE `Inventory_ID` = ? AND User_id = ? "
+  const q2 = "INSERT INTO `waste` (`User_id`,`Kg_waste`,`Pcs_waste`, `Inventory_ID`) VALUES (?)"
+  const userID =  1000
 
-  const values = [userID, req.body.weight, req.body.pieces, req.body.inv_id];
-
-  //Check if ingredient is already in the waste table.
-  db.query(q1, [req.body.inv_id, userID], (err, data) => {
-    if (err) {
-      console.log(err);
-    } else if (data.length > 0) {
-      return res.json("Failed");
-    } else {
+  const values = [
+    userID,
+    req.body.weight,
+    req.body.pieces,
+    req.body.inv_id,
+  ];
       //Insert new waste.
-      db.query(q2, [values], (err, data) => {
-        if (err) console.log(err);
-        return res.json(data);
-      });
-    }
+      db.query(q2, [values], (err,data)=>{
+        if(err){
+        console.log(err)
+        return res.json("Failed")
+      }
+        return res.json(data)
+      })
   });
-});
 
 app.post("/addType", (req, res) => {
   const q1 =
