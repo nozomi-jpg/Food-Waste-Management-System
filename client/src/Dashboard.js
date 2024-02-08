@@ -132,7 +132,7 @@ function CurrentDayWaste() {
         {isRecommOpen && (
           <Recommendation
             setRecommOpen={setRecommOpen}
-            mostWastedFood={dayWaste.foodItem}
+            mostWastedFood={dayWaste}
             totalWastePrice={dayWaste.totalPrice}
             totalWasteKgs={dayWaste.totalKilo}
           />
@@ -308,7 +308,7 @@ function PeriodicWaste() {
           {isRecommOpen && (
             <Recommendation
               setRecommOpen={setRecommOpen}
-              mostWastedFood={periodicWaste.foodItem}
+              mostWastedFood={periodicWaste}
               totalWastePrice={periodicWaste.totalPrice}
               totalWasteKgs={periodicWaste.totalKilo}
             />
