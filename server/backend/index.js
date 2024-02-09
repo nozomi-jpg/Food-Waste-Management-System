@@ -167,14 +167,14 @@ app.get("/ingredientsDropdown", (req, res) => {
 
 app.get("/ingredientPrice/:id", (req, res) => {
   const ingredientId = req.params.id;
-  const q = "SELECT `Price` FROM inventory WHERE `Inventory_ID` = ?";
+  const q = "SELECT `Price`, `Type_name`, inventory.Type_ID FROM inventory INNER JOIN type ON inventory.Type_ID = type.Type_ID WHERE `Inventory_ID` = ?";
   
   db.query(q, ingredientId, (err, data) => {
     if (err) return res.json(err);
     if (data.length === 0) {
       return res.status(404).json({ error: "Ingredient not found" });
     }
-    return res.json({ price: data[0].Price });
+    return res.json({ price: data[0].Price, type: data[0].Type_name });
   });
 });
 
