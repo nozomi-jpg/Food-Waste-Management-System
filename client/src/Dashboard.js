@@ -4,7 +4,7 @@ import Header from "./Header";
 import Recommendation from "./Recommendation";
 import { DateRange } from "react-date-range";
 import { format } from "date-fns";
-import axios from "axios";
+import axios from 'axios';
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 
@@ -38,15 +38,13 @@ export default function Dashboard() {
 }
 
 function HorizontalRule() {
-  return (
-    <div className="horizontal-rule">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  );
+  return <div className="horizontal-rule">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>;
 }
 
 // CURRENT DAY WASTE SECTION
@@ -58,60 +56,47 @@ function CurrentDayWaste() {
     foodItemPrice: "No waste",
     totalPrice: "No waste",
     totalKilo: "No waste",
-  });
+  })
 
   //get the current day waste statistics
-  useEffect(() => {
+  useEffect(()=>{
     const fetchDayWaste = async () => {
-      try {
-        const res = await axios.get(
-          "https://vercel-server-gilt.vercel.app/dayWaste"
-        );
-
+      try{
+        const res = await axios.get("http://localhost:8081/dayWaste")
+        
         //Compute today's statistics
         const priceSum = res.data.reduce((accumulator, object) => {
-          return (
-            accumulator +
-            object.Price *
-              (object.Pcs_waste === 0 ? object.Kg_waste : object.Pcs_waste)
-          );
+          return accumulator + object.Price;
         }, 0);
 
         const priceKilo = res.data.reduce((accumulator, object) => {
           return accumulator + object.Kg_waste;
         }, 0);
 
-        const mostWasted = res.data.reduce(function (prev, current) {
-          return prev &&
-            prev.Price *
-              (prev.Pcs_waste === 0 ? prev.Kg_waste : prev.Pcs_waste) >
-              current.Price *
-                (current.Pcs_waste === 0 ? current.Kg_waste : current.Pcs_waste)
-            ? prev
-            : current;
-        }, null);
+        const mostWasted = res.data.reduce(function(prev, current) {
+          return (prev && prev.Price * prev.Kg_waste > current.Price * current.Kg_waste) ? prev : current
+        })
+      
 
         setDayWaste({
           foodItem: mostWasted.Name_inventory,
-          foodItemPrice:
-            mostWasted.Price *
-            (mostWasted.Pcs_waste === 0
-              ? mostWasted.Kg_waste
-              : mostWasted.Pcs_waste),
+          foodItemPrice: mostWasted.Price * mostWasted.Kg_waste,
           totalPrice: priceSum,
-          totalKilo: priceKilo,
-        });
-      } catch (err) {
-        console.log(err);
+          totalKilo: priceKilo
+        })
+      } catch(err){
+        console.log(err)
       }
     };
 
     fetchDayWaste();
   }, []);
-
+  
   function HandleClick() {
     setRecommOpen(true);
   }
+
+
 
   // INSERT CODE TO GET most wasted item by price, total price of all wastes, total kg of all wastes
   // pass those values as props to CurrentDayCard below
@@ -129,14 +114,7 @@ function CurrentDayWaste() {
         </button>
 
         {/* If recomm button is clicked, open modal */}
-        {isRecommOpen && (
-          <Recommendation
-            setRecommOpen={setRecommOpen}
-            mostWastedFood={dayWaste}
-            totalWastePrice={dayWaste.totalPrice}
-            totalWasteKgs={dayWaste.totalKilo}
-          />
-        )}
+        {isRecommOpen && <Recommendation setRecommOpen={setRecommOpen} />}
       </div>
 
       {/* For cards */}
@@ -204,7 +182,14 @@ function PeriodicWaste() {
     },
   ]);
 
-  const [periodicWaste, setPeriodicWaste] = useState({});
+  const [periodicWaste, setPeriodicWaste] = useState(
+    {
+      foodItem: "apple",
+      foodItemPrice: 54,
+      totalPrice: 25,
+      totalKilo: 23
+    }
+  )
 
   const [expiredTotal, setExpiredTotal] = useState(0);
 
@@ -218,78 +203,63 @@ function PeriodicWaste() {
   // then pass values as props to each card
 
   //get the periodic waste statistics
-  useEffect(() => {
+  useEffect(()=>{
     const fetchPeriodicWaste = (dateRange) => {
-      axios
-        .post(
-          "https://vercel-server-gilt.vercel.app/periodicWaste",
-          dateRange[0]
-        )
-        .then((res) => {
-          if (Object.keys(res.data).length) {
-            const priceSum = res.data.reduce((accumulator, object) => {
-              return accumulator + object.Price;
-            }, 0);
+      axios.post('http://localhost:8081/periodicWaste', dateRange[0])
+      .then((res) => {
+        const priceSum = res.data.reduce((accumulator, object) => {
+          return accumulator + object.Price;
+        }, 0);
 
-            const priceKilo = res.data.reduce((accumulator, object) => {
-              return accumulator + object.Kg_inventory;
-            }, 0);
+        const priceKilo = res.data.reduce((accumulator, object) => {
+          return accumulator + object.Kg_inventory;
+        }, 0);
 
-            const mostWasted = res.data.reduce(function (prev, current) {
-              return prev &&
-                prev.Price * prev.Kg_inventory >
-                  current.Price * current.Kg_inventory
-                ? prev
-                : current;
-            });
-
-            console.log("Sum", priceSum);
-            console.log("Kilo", priceKilo);
-            console.log("Most", mostWasted);
-
-            setPeriodicWaste({
-              foodItem: mostWasted.Name_inventory,
-              foodItemPrice: mostWasted.Price * mostWasted.Kg_inventory,
-              totalPrice: priceSum,
-              totalKilo: priceKilo,
-            });
-          } else {
-            setPeriodicWaste({
-              foodItem: "None",
-              foodItemPrice: 0,
-              totalPrice: 0,
-              totalKilo: 0,
-            });
-          }
+        const mostWasted = res.data.reduce(function(prev, current) {
+          return (prev && prev.Price * prev.Kg_inventory > current.Price * current.Kg_inventory) ? prev : current
         })
-        .catch((error) => {
-          console.log("Error during fetching record:", error);
-          // Add additional error handling as needed
-        });
-    };
+
+        console.log("Sum",priceSum)
+        console.log("Kilo",priceKilo)
+        console.log("Most",mostWasted)
+      
+        setPeriodicWaste({
+          foodItem: mostWasted.Name_inventory,
+          foodItemPrice: mostWasted.Price * mostWasted.Kg_inventory,
+          totalPrice: priceSum,
+          totalKilo: priceKilo
+        })
+
+      })
+      .catch((error) => {
+        console.log('Error during fetching record:', error);
+        // Add additional error handling as needed
+      });
+    }
 
     fetchPeriodicWaste(dateRange);
-  }, [dateRange]);
-
-  //get the expired waste statistics
-  useEffect(() => {
-    const fetchExpiredTotal = (dateRange) => {
-      axios
-        .get("https://vercel-server-gilt.vercel.app/expiredStats")
+  },[dateRange]);
+  
+    //get the expired waste statistics
+    useEffect(()=>{
+      const fetchExpiredTotal = (dateRange) => {
+        axios.get('http://localhost:8081/expiredStats')
         .then((res) => {
+
           const priceSum = res.data.reduce((accumulator, object) => {
             return accumulator + object.Price;
           }, 0);
-
-          setExpiredTotal(priceSum);
+        
+          setExpiredTotal(priceSum)
+  
         })
         .catch((error) => {
-          console.log("Error during fetching record:", error);
+          console.log('Error during fetching record:', error);
           // Add additional error handling as needed
         });
-    };
-    fetchExpiredTotal();
-  }, [dateRange]);
+      }
+      fetchExpiredTotal();
+    },[]);
 
   return (
     <div className="report-section" id="dashboard-periodic-report">
@@ -305,14 +275,7 @@ function PeriodicWaste() {
             Recommendations
           </button>
           {/* If recomm button is clicked, open modal */}
-          {isRecommOpen && (
-            <Recommendation
-              setRecommOpen={setRecommOpen}
-              mostWastedFood={periodicWaste}
-              totalWastePrice={periodicWaste.totalPrice}
-              totalWasteKgs={periodicWaste.totalKilo}
-            />
-          )}
+          {isRecommOpen && <Recommendation setRecommOpen={setRecommOpen} />}
           {/*may pass data as prop to recomm.js*/}
         </div>
 
@@ -327,17 +290,11 @@ function PeriodicWaste() {
       </div>
 
       <div className="cards-section-periodic">
-        <TotalWeightCard
-          weight={periodicWaste.totalKilo}
-          dateRange={dateRange}
-        />
-        <MostWastedCard dateRange={dateRange} />
-        <TotalKgWasteCard dateRange={dateRange} />
-        <AccumulatedPriceCard
-          accumulated_price={periodicWaste.totalPrice}
-          dateRange={dateRange}
-        />
-        <PriceEachMonthCard dateRange={dateRange} />
+        <TotalWeightCard weight={periodicWaste.totalKilo} />
+        <MostWastedCard />
+        <TotalKgWasteCard />
+        <AccumulatedPriceCard accumulated_price={periodicWaste.totalPrice} />
+        <PriceEachMonthCard />
         <ExpiredCard expired_total_price={expiredTotal} />
       </div>
     </div>
@@ -394,7 +351,7 @@ function DateRangeForm({
         setDateRange([
           {
             startDate: new Date(
-              new Date().setFullYear(new Date().getFullYear() - 1) //if chosen range is custom
+              new Date().setFullYear(new Date().getFullYear()-1) //if chosen range is custom
             ),
             endDate: new Date(),
             key: "selection",
@@ -408,7 +365,7 @@ function DateRangeForm({
   function HandleDateRangeChange(range) {
     setDateRange([range.selection]);
   }
-  console.log("Date range:", dateRange);
+
   return (
     <>
       {/* {render dropdown to select range } */}
@@ -463,43 +420,36 @@ function TotalWeightCard({ weight }) {
   return (
     <div class="card" id="card-periodic-total-waste">
       <h3 class="h3-periodic">Total Weight of Food Waste in Kgs</h3>
-      <h1 class="h1-periodic">{weight} Kgs</h1>
+      <h1 class="h1-periodic">{Math.round(weight*100)/100} Kgs</h1>
     </div>
   );
 }
 
-function MostWastedCard({ dateRange }) {
+function MostWastedCard({ dataaa }) {
+
   //sample data you can pass
   const [mostWasted, setMostWasted] = useState([]);
 
   //Display ingredients from inventory
-  useEffect(() => {
+  useEffect(()=>{
     const fetchMostWasted = async () => {
-      try {
-        const res = await axios.get(
-          "https://vercel-server-gilt.vercel.app/mostWasted"
-        );
-
+      try{
+        const res = await axios.get("http://localhost:8081/mostWasted")
+        
         //Rename the keys of the data object
-        if (Object.keys(res.data).length) {
-          res.data.forEach(Rename);
-          function Rename(item) {
-            delete Object.assign(item, { name: item.Name_inventory })[
-              "Name_inventory"
-            ];
-            delete Object.assign(item, { value: item.Price })["Price"];
-          }
-          setMostWasted(res.data);
-        } else {
-          setMostWasted(0);
+        res.data.forEach(Rename);
+        function Rename(item){
+          delete Object.assign(item, { name: item.Name_inventory })['Name_inventory'];
+          delete Object.assign(item, { value: item.Price })['Price'];
         }
-      } catch (err) {
-        console.log(err);
+        setMostWasted(res.data)
+      } catch(err){
+        console.log(err)
       }
     };
 
     fetchMostWasted();
-  }, [dateRange]);
+  }, []);
 
   //set colors of pie chart
   const COLORS = ["#D0EFB1", "#B3D89C", "#9DC3C2", "#77A6B6", "#4D7298"];
@@ -569,55 +519,46 @@ function AccumulatedPriceCard({ accumulated_price }) {
       <h3 class="h3-periodic">Accumulated Price of Wastes</h3>
       <h1 class="h1-periodic">
         PHP <br />
-        {accumulated_price}
+        {Math.round(accumulated_price*100)/100}
       </h1>
     </div>
   );
 }
 
-function TotalKgWasteCard({ dateRange }) {
+function TotalKgWasteCard({ dataaa }) {
   //sample data you can pass
   const [KgWaste, setKgWaste] = useState([]);
 
   function getMonthName(monthNumber) {
     const date = new Date();
     date.setMonth(monthNumber - 1);
-
-    return date.toLocaleString("en-US", {
-      month: "short",
+  
+    return date.toLocaleString('en-US', {
+      month: 'short',
     });
-  }
+  }  
 
-  useEffect(() => {
-    const fetchMonthlyReport = async () => {
-      try {
-        const res = await axios.get(
-          "https://vercel-server-gilt.vercel.app/monthlyReport"
-        );
+  useEffect(()=>{
+    const fetchMonthlyReport= async () => {
+      try{
+        const res = await axios.get("http://localhost:8081/monthlyReport")
         //Rename the keys of the data object
-        if (Object.keys(res.data).length) {
-          res.data.forEach(Rename);
-          function Rename(item) {
-            delete Object.assign(item, {
-              name: getMonthName(item["MONTH(Date_waste)"]),
-            })["MONTH(Date_waste)"];
-            delete Object.assign(item, { Kg: item["SUM(Kg_waste)"] })[
-              "SUM(Kg_waste)"
-            ];
-            delete item["SUM(Price)"];
-          }
-
-          setKgWaste(res.data);
-        } else {
-          setKgWaste(0);
+        res.data.forEach(Rename);
+        function Rename(item){
+          delete Object.assign(item, { name: getMonthName(item['MONTH(Date_waste)'])})['MONTH(Date_waste)'];
+          delete Object.assign(item, { Kg: item['SUM(Kg_waste)']})['SUM(Kg_waste)'];
+          delete item['SUM(Price)'];
         }
-      } catch (err) {
-        console.log(err);
+
+        setKgWaste(res.data)
+      } catch(err){
+        console.log(err)
       }
     };
 
     fetchMonthlyReport();
-  }, [dateRange]);
+  },[]);
+
 
   return (
     <div class="card" id="card-periodic-kg-each-month">
@@ -634,50 +575,40 @@ function TotalKgWasteCard({ dateRange }) {
   );
 }
 
-function PriceEachMonthCard({ dateRange }) {
+function PriceEachMonthCard({ dataaa }) {
   //sample data you can pass
   const [priceMonthData, setPriceMonthData] = useState([]);
 
   function getMonthName(monthNumber) {
     const date = new Date();
     date.setMonth(monthNumber - 1);
-
-    return date.toLocaleString("en-US", {
-      month: "short",
+  
+    return date.toLocaleString('en-US', {
+      month: 'short',
     });
-  }
+  }  
 
-  useEffect(() => {
-    const fetchMonthlyReport = async () => {
-      try {
-        const res = await axios.get(
-          "https://vercel-server-gilt.vercel.app/monthlyReport"
-        );
+  useEffect(()=>{
+    const fetchMonthlyReport= async () => {
+      try{
+        const res = await axios.get("http://localhost:8081/monthlyReport")
         //Rename the keys of the data object
-        if (Object.keys(res.data).length) {
-          res.data.forEach(Rename);
-          function Rename(item) {
-            delete Object.assign(item, {
-              name: getMonthName(item["MONTH(Date_waste)"]),
-            })["MONTH(Date_waste)"];
-            delete Object.assign(item, {
-              price: item["SUM(Kg_waste)"] * item["SUM(Price)"],
-            })["SUM(Kg_waste)"];
-            delete item["SUM(Price)"];
-          }
-
-          setPriceMonthData(res.data);
-        } else {
-          setPriceMonthData([]);
+        res.data.forEach(Rename);
+        function Rename(item){
+          delete Object.assign(item, { name: getMonthName(item['MONTH(Date_waste)'])})['MONTH(Date_waste)'];
+          delete Object.assign(item, { price: item['SUM(Kg_waste)'] * item['SUM(Price)']})['SUM(Kg_waste)'];
+          delete item['SUM(Price)'];
         }
-        console.log(priceMonthData);
-      } catch (err) {
-        console.log(err);
+
+        setPriceMonthData(res.data)
+        console.log(priceMonthData)
+      } catch(err){
+        console.log(err)
       }
     };
 
     fetchMonthlyReport();
-  }, [dateRange]);
+  },[]);
 
   return (
     <div class="card" id="card-periodic-price-each-month">
@@ -710,12 +641,13 @@ function PriceEachMonthCard({ dateRange }) {
 }
 
 function ExpiredCard({ expired_total_price }) {
+
   return (
     <div class="card" id="card-periodic-expired">
       <h3 class="h3-periodic">Price of All Expired Items</h3>
       <h1 class="h1-periodic">
         PHP <br />
-        {expired_total_price}
+        {Math.round(expired_total_price * 100) / 100}
       </h1>
     </div>
   );
