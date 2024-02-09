@@ -228,7 +228,11 @@ function PeriodicWaste() {
         .then((res) => {
           if (Object.keys(res.data).length) {
             const priceSum = res.data.reduce((accumulator, object) => {
-              return accumulator + object.Price;
+              return (
+                accumulator +
+                object.Price *
+                  (object.Pcs_waste === 0 ? object.Kg_waste : object.Pcs_waste)
+              );
             }, 0);
 
             const priceKilo = res.data.reduce((accumulator, object) => {
@@ -249,7 +253,11 @@ function PeriodicWaste() {
 
             setPeriodicWaste({
               foodItem: mostWasted.Name_inventory,
-              foodItemPrice: mostWasted.Price * mostWasted.Kg_inventory,
+              foodItemPrice:
+                mostWasted.Price *
+                (mostWasted.Pcs_waste === 0
+                  ? mostWasted.Kg_waste
+                  : mostWasted.Pcs_waste),
               totalPrice: priceSum,
               totalKilo: priceKilo,
             });

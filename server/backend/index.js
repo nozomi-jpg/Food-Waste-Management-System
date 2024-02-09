@@ -102,7 +102,7 @@ app.get("/expiringWeek", (req, res) => {
 
 app.post("/periodicWaste", (req, res) => {
   const q =
-    "SELECT `Name_inventory`, `Kg_inventory`, `Price` FROM `waste` INNER JOIN inventory ON waste.Inventory_ID = inventory.Inventory_ID WHERE waste.User_id = ? AND ( Date_waste BETWEEN ? AND ? )";
+    "SELECT * FROM `waste` INNER JOIN inventory ON waste.Inventory_ID = inventory.Inventory_ID WHERE waste.User_id = ? AND ( Date_waste BETWEEN ? AND ? )";
   const userID = 1000; //to be changed
   const startDate = moment.utc(req.body.startDate).format("YYYY/MM/DD");
   const endDate = moment.utc(req.body.endDate).format("YYYY/MM/DD");
