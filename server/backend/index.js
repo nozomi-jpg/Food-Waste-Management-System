@@ -153,15 +153,15 @@ app.get("/ingredients", (req, res) => {
   });
 });
 
-app.get("/ingredientsDropdown", (req, res) => {
-  const q =
-    "SELECT `Inventory_ID`, `Name_inventory` FROM inventory WHERE User_Id = ?";
-  const userID = 1000;
+app.get("/ingredientsDropdown", (req,res)=>{
+  const q = "SELECT `Inventory_ID`, `Name_inventory`, `Price` FROM inventory WHERE User_Id = ?"
+  const userID = 1000 
 
-  db.query(q, userID, (err, data) => {
-    if (err) return res.json(err);
-    return res.json(data);
-  });
+  db.query(q,userID,(err,data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+
 });
 
 
