@@ -372,27 +372,26 @@ function FormSection({ clickedRecord, handleSetInventoryRecord }) {
                   </Link>
                 </div>
                 {/* loops through each type of waste and being put as option */}
-                <select
+                <input
+                  type="text"
                   id="waste-type"
-                  value={textfields.type_id}
+                  value={textfields.type_field}
+                  readOnly
                   onChange={(e) =>
-                    handleFieldChanges("type_id", e.target.value)
+                    handleFieldChanges("type_field", e.target.value)
                   }
-                >
-                  {types.map((type) => (
-                    <option value={`${type.id}`}>{type.type_name}</option>
-                  ))}
-                </select>
+                />
               </div>
             </div>
             <div className="today-det-row">
-              <div>
+<div>
                 <label for="waste-price">Price</label>
                 <input
                   type="text"
                   id="waste-price"
                   placeholder="Enter price (&#8369;)"
                   value={textfields.price_field}
+                  readOnly
                   onChange={(e) =>
                     handleFieldChanges("price_field", e.target.value)
                   }
@@ -496,14 +495,13 @@ function Dropdown({ inventory_id, inventory_name, handleFieldChanges }) {
 
   const handleDropDowns = async (ingredient) => {
     try {
-      const res = await axios.get(`https://vercel-server-gilt.vercel.app/${ingredient.inventory_id}`);
-      const { price, type_id, type_name } = res.data;
+      const res = await axios.get(`https://vercel-server-gilt.vercel.app/ingredientPrice/${ingredient.inventory_id}`);
+      const { price, type } = res.data;
       
       handleFieldChanges("inventory_id", ingredient.inventory_id);
       handleFieldChanges("ingredient_field", ingredient.Ingredient);
       handleFieldChanges("price_field", price);
-      handleFieldChanges("type_id", type_id);
-      handleFieldChanges("type_field", type_name);
+      handleFieldChanges("type_field", type);
     } catch (err) {
       console.log(err);
     }
@@ -550,7 +548,7 @@ function Dropdown({ inventory_id, inventory_name, handleFieldChanges }) {
                     <div
                       id={key}
                       className="dropdown-option"
-                      onClick={() => handleDropDownss(ingredient)}
+                      onClick={() => handleDropDowns(ingredient)}
                     >
                       {ingredient.inventory_id} - {ingredient.Ingredient}
                     </div>
