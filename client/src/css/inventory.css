@@ -57,7 +57,7 @@
 
 #inventory-search-and-sorting {
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
   width: 1000px;
 }
 .searchbox-wrapper {
