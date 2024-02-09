@@ -463,7 +463,7 @@ function TotalWeightCard({ weight }) {
   return (
     <div class="card" id="card-periodic-total-waste">
       <h3 class="h3-periodic">Total Weight of Food Waste in Kgs</h3>
-      <h1 class="h1-periodic">{weight} Kgs</h1>
+      <h1 class="h1-periodic">{Math.round(weight*100)/100} Kgs</h1>
     </div>
   );
 }
@@ -569,7 +569,7 @@ function AccumulatedPriceCard({ accumulated_price }) {
       <h3 class="h3-periodic">Accumulated Price of Wastes</h3>
       <h1 class="h1-periodic">
         PHP <br />
-        {accumulated_price}
+        {Math.round(accumulated_price*100)/100}
       </h1>
     </div>
   );
