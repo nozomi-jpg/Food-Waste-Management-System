@@ -157,16 +157,16 @@ function CurrentDayWaste() {
             title={"Most Wasted Food Item"}
             subtitle={"(By Price)"}
             value={`${dayWaste.foodItem}`}
-            subvalue={`PHP ${dayWaste.foodItemPrice}`}
+            subvalue={`PHP ${Math.round(dayWaste.foodItemPrice * 100) / 100}`}
           />
           <CurrentDayCard
             title={"Total Price of all Food Wastes"}
-            value={`PHP ${dayWaste.totalPrice}`}
+            value={`PHP ${Math.round(dayWaste.totalPrice * 100)/100}`}
           />
 
           <CurrentDayCard
             title={"Total Kilograms of Food Wastes"}
-            value={`${dayWaste.totalKilo}`}
+            value={`${Math.round(dayWaste.totalKilo * 100) / 100}`}
           />
         </div>
       </div>
