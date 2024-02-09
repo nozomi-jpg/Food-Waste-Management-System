@@ -214,7 +214,7 @@ function PeriodicWaste() {
   }
 
   // INSERT CODE HERE TO Get data based on selected range and date range(if custom)
-  // extract total_weight, array/object(most wasted items by price; ex. name: Meat, price: 120), array/object(total kg per month or day), accumulated_price, array/object(total price per month or day), expired_total_price
+  // extract total_weight, array/object(most wasted items by price; ex. name: Meat, price: 120), array/object(total kg per month or day), accumulated_price, array/object(total price per month or day), 
   // then pass values as props to each card
 
   //get the periodic waste statistics
@@ -715,7 +715,7 @@ function ExpiredCard({ expired_total_price }) {
       <h3 class="h3-periodic">Price of All Expired Items</h3>
       <h1 class="h1-periodic">
         PHP <br />
-        {expired_total_price}
+        {Math.round(expired_total_price * 100) / 100}
       </h1>
     </div>
   );
